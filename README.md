@@ -19,7 +19,7 @@ Built for the **Presage SmartSpectra SDK Challenge 2026** with Electron, React a
 
 *These screenshots were captured in keyboard-only mode (no camera). With the camera on, a live face preview with Smile / Surprise indicators appears in the bottom-right corner of the game screen.*
 
-**On this page:** [Try it](#try-it-in-two-minutes) · [The game](#the-game) · [SmartSpectra](#how-smartspectra-is-used) · [Install](#install-and-run) · [Controls](#controls) · [Privacy](#privacy-and-data-handling) · [Tests](#tests-and-verification) · [Limitations](#known-limitations) · [Troubleshooting](#troubleshooting) · [Architecture](#under-the-hood)
+**On this page:** [Try it](#try-it-in-two-minutes) · [The game](#the-game) · [SmartSpectra](#how-smartspectra-is-used) · [Requirements](#requirements--compatibility) · [Install](#install-and-run) · [Controls](#controls) · [Privacy](#privacy-and-data-handling) · [Tests](#tests-and-verification) · [Troubleshooting](#troubleshooting) · [Architecture](#under-the-hood)
 
 ---
 
@@ -34,7 +34,7 @@ npm install            # in PowerShell use npm.cmd if script execution is disabl
 npm start              # then choose "Play the story" and "Play with keyboard only"
 ```
 
-Requirements: Windows 10/11 (x64) and Node.js 24 or newer. To play with your face you also need a webcam, an internet connection and your own Presage API key; see [Install and run](#install-and-run).
+Requirements: Windows 10/11 (x64) and Node.js 24 or newer. To play with your face you also need a webcam, an internet connection and your own Presage API key; see [Requirements & compatibility](#requirements--compatibility).
 
 ---
 
@@ -51,11 +51,11 @@ You are the city's newly recruited **Stink Control Hero**. **Bean Kid** loves be
 ### The two facial controls
 
 - 😀 **Smile → freshener.** A quick smile sprays for 4 seconds, then the spray reloads for 2 seconds. Holding a smile does not fire twice, so you never have to grin continuously.
-- 😮 **Surprised face → open the windows** (Level 3, **optional**). A bigger, faster stink fix. The whole game, including Level 3, can be won with smiles only, and **K** is the keyboard alternative.
+- 😮 **Surprised face → open the windows** (Level 3, **optional**). A bigger, faster stink fix. Surprise is the less reliable of the two expressions, so it is never required: the whole game, including Level 3, can be won with smiles only, and **K** is the keyboard alternative.
 
 ### The Classroom twist
 
-Smiling is the weapon, so Level 2 turns it into the risk. The teacher turns round after a short warning, and while she is watching, a *new* spray gets you caught: **−150 points, extra stink and a confiscated spray**. A smile that helps you one second can hurt you the next, so you have to watch the teacher and time your face. Missing or invalid readings are never treated as a calm face, so a lost signal cannot silently help or hurt you.
+Smiling is the weapon, so Level 2 turns it into the risk. The teacher turns round after a short warning, and while she is watching, a *new* spray gets you caught: **−150 points, extra stink and a confiscated spray**. A smile that helps you one second can hurt you the next, so you have to watch the teacher and time your face. Classroom is intentionally the hardest level. Missing or invalid readings are never treated as a calm face, so a lost signal cannot silently help or hurt you.
 
 ### Features
 
@@ -87,14 +87,16 @@ Smiling is the weapon, so Level 2 turns it into the risk. The teacher turns roun
 
 ---
 
+## Requirements & compatibility
+
+- **Windows 10 or 11 (x64)**. Developed and tested on Windows 11; other platforms are not supported.
+- **Node.js 24** (LTS) or newer, and npm.
+- **Keyboard-only play** needs nothing else: no camera, no internet and no API key.
+- **Camera play** needs a webcam, an internet connection while the camera is on (the SDK contacts Presage's servers; see [Privacy](#privacy-and-data-handling)), and your own **Presage API key** from the [Presage developer portal](https://physiology.presagetech.com/). Camera sessions use your own API quota.
+- Expression recognition varies between people, lighting and cameras. Smile is the reliable control; surprise is weaker and always optional.
+- Optional: an English Windows text-to-speech voice for narration (subtitles are always shown).
+
 ## Install and run
-
-**Requirements**
-
-- **Windows 10 or 11 (x64)** (developed and tested on Windows 11)
-- **Node.js 24** (LTS) or newer, and npm
-- For camera play: a webcam, an internet connection while the camera is on (see [Privacy](#privacy-and-data-handling)), and a **Presage API key** from the [Presage developer portal](https://physiology.presagetech.com/). Camera sessions use your own API quota.
-- Optional: an English Windows text-to-speech voice for narration (subtitles are always shown)
 
 **Setup**
 
@@ -174,14 +176,13 @@ node scripts/launch.mjs --script scripts/verify-lifecycle.cjs   # camera ownersh
 | Camera ownership: window reload, renderer crash, window close, delayed teardown, startup timeout and retry | `verify-lifecycle.cjs`, which runs the real main process, preload and UI against an **SDK stand-in**. It proves the start/stop/destroy calls and their ordering, not native camera behaviour. |
 | Live SmartSpectra | One controlled real-camera session validated consent and start, live smile and surprise recognition, smile-driven play through all three levels and the finale, and a normal quit. Details: [`docs/SDK_VALIDATION.md`](docs/SDK_VALIDATION.md). |
 
-## Known limitations
+### Testing boundaries
 
-- **Not independently verified on real hardware:** live signal-loss recovery, and whether the physical webcam light turns off after quitting. Both are covered only by simulation and code, not by a live test.
+Stated plainly so the evidence above is not over-read:
+
+- **Not independently verified on real hardware:** live signal-loss recovery, and whether the physical webcam light turns off after quitting. Both are covered by simulation and code, not by a live test.
 - The in-game facecam and its **F** toggle were tested with simulated preview frames.
-- **Open issue (not fixed): possible intermittent frame stall.** An automated Classroom run once showed a gap of roughly 2 seconds between rendered frames. Later short profiling runs did not reproduce it, and its cause is unknown. No performance fix is claimed.
-- Recognition varies between people, lighting and cameras. Smile is the reliable control; surprise is weaker and always optional.
-- Windows only. Classroom is intentionally hard.
-- The camera needs an internet connection and your own Presage API key.
+- **Performance:** one automated Classroom run once showed a gap of roughly 2 seconds between rendered frames. Later short profiling runs did not reproduce it and its cause is unknown, so that observation remains unresolved. No performance fix is claimed, and these tests do not certify smooth frame rates on every machine.
 
 ## Troubleshooting
 

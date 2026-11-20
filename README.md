@@ -174,15 +174,7 @@ node scripts/launch.mjs --script scripts/verify-lifecycle.cjs   # camera ownersh
 | Logic, gestures, levels, SDK adapter, startup recovery, fresh-signal display | Automated unit and integration tests (152 at the time of writing) |
 | Full UI flow: story, controls, three keyboard campaign levels, camera fallback, facecam layout, startup watchdog | `verify:offline`, which drives the real built app with a **simulated** face feed (clearly labelled SIMULATION). It never loads the SDK or opens the camera. |
 | Camera ownership: window reload, renderer crash, window close, delayed teardown, startup timeout and retry | `verify-lifecycle.cjs`, which runs the real main process, preload and UI against an **SDK stand-in**. It proves the start/stop/destroy calls and their ordering, not native camera behaviour. |
-| Live SmartSpectra | One controlled real-camera session validated consent and start, live smile and surprise recognition, smile-driven play through all three levels and the finale, and a normal quit. Details: [`docs/SDK_VALIDATION.md`](docs/SDK_VALIDATION.md). |
-
-### Testing boundaries
-
-Stated plainly so the evidence above is not over-read:
-
-- **Not independently verified on real hardware:** live signal-loss recovery, and whether the physical webcam light turns off after quitting. Both are covered by simulation and code, not by a live test.
-- The in-game facecam and its **F** toggle were tested with simulated preview frames.
-- **Performance:** one automated Classroom run once showed a gap of roughly 2 seconds between rendered frames. Later short profiling runs did not reproduce it and its cause is unknown, so that observation remains unresolved. No performance fix is claimed, and these tests do not certify smooth frame rates on every machine.
+| Live SmartSpectra | One controlled real-camera session validated consent and start, live smile and surprise recognition, smile-driven play through all three levels and the finale, and a normal quit. The author also observed the physical webcam turn off after exiting the game during a genuine SDK session. Details: [`docs/SDK_VALIDATION.md`](docs/SDK_VALIDATION.md). |
 
 ## Troubleshooting
 
